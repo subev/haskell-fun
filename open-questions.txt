@@ -1,0 +1,28 @@
+page 167 ex2
+foo :: a -> a -> a
+foo x y = (x y) | (y x) //are those the two cases?
+
+page 167 ex3.
+bar :: a -> b -> b
+bar a b = b ?? identity function with extra argument to fill?
+
+is (Int a, Char b) => a -> [b]
+the same as Int -> [Char]
+Asnwer: the former is called constrained polimorphic value, the second one is concrete type type constructor
+
+so have a look below, even with the type
+signatures commented,  the type of multiBy10
+turns out to be Integer -> Integer,
+why is this when the (*) operator is Num type
+{-multiBy10 :: Int -> Int-}
+multiBy10 = compose multiby5 multiby2
+  where multiby5 = (*) 5 {-:: Int -> Int-}
+        multiby2 = (*) 2 {-:: Int -> Int-}
+compose :: (a2 -> a3) -> (a1 -> a2) -> (a1 -> a3)
+compose f1 f2 = \x -> f1 (f2 x)
+
+let's go again over exercise 6 before chapter 7.12
+
+i gave up on "Fixing divideBy", what's the cleanest way to update the new Data tapa to support negate?
+
+I am not sure what is the correct way to implement splitBy on page 332, check my solution at chapter-9 take-drop.hs

@@ -1,0 +1,7 @@
+not :: Bool a => a -> a
+length :: Foldeble t => t a -> Num
+length :: [a] -> Num
+concat :: [[a]] -> [a] // ["lol", "amazing"] -> "lolamazing"
+concat :: Foldable t => t a -> a // [['l','o','l']] -> "lol"
+head :: [a] -> a
+(<) :: Ord a => a -> a -> Bool

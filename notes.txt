@@ -1,0 +1,5 @@
+Weak head normal form is state of the of the expression that may be fully or not fully evaluated.
+Normal form means the expression is fully evaluated.
+WHNF(weak head normal form) might also be in a state where it is evaluated to the point of arriving a data constructor or lambda waiting an argument.
+
+if the expression does not have data constructor at the top of it, then it is not WHNF
