@@ -3,3 +3,5 @@ Normal form means the expression is fully evaluated.
 WHNF(weak head normal form) might also be in a state where it is evaluated to the point of arriving a data constructor or lambda waiting an argument.
 
 if the expression does not have data constructor at the top of it, then it is not WHNF
+
+  newtype lesson and exercises (page 430) are not working and I need to go over them again

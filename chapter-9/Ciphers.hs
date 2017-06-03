@@ -5,6 +5,9 @@ import Data.Char
 cipher :: Int -> String -> String
 cipher offset = transform offset newPosition
 
+decode :: Int -> String -> String
+decode offset = cipher (-offset)
+
 decoode :: Int -> String -> String
 decoode offset = transform offset reversePosition
 

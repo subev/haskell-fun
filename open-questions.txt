@@ -26,3 +26,10 @@ let's go again over exercise 6 before chapter 7.12
 i gave up on "Fixing divideBy", what's the cleanest way to update the new Data tapa to support negate?
 
 I am not sure what is the correct way to implement splitBy on page 332, check my solution at chapter-9 take-drop.hs
+
+WTF Chapter 10.7 code snippet
+  So the second example:
+  ```
+  foldl (flip const) 0 (reverse (repeat 1 ++ [1,2,3]))
+  ```
+  I think the example fails to demonstrate how foldl will go wrong as explained. Because if you try to reverse an endless list which in this case is (repeat 1) then no matter if you use foldl or foldr it will hang for sure.
