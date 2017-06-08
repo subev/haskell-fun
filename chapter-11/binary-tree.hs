@@ -68,3 +68,16 @@ foldTree f acc (Node left x right) =
     rightResult = foldTree f leftResult right
 
 listFromTreeUsingReduce = reverse $ foldTree (:) [] ex2SampleTree
+
+{-ex on page 508-}
+unfoldTree :: (a -> Maybe (a,b,a)) -> a -> BinaryTree b
+unfoldTree f x = case f x of
+                 Nothing -> Leaf
+                 Just (left, b, right) -> Node (unfoldTree f left) b (unfoldTree f right)
+
+{-ex tree builder-}
+treeBuild :: Integer -> BinaryTree Integer
+treeBuild n = unfoldTree (\level -> case level of
+                                      0 -> Nothing
+                                      x -> Just (x - 1, n - x, x - 1)
+                         ) n

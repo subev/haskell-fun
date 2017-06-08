@@ -1,0 +1,1 @@
+integerToNat function uses maybe in an ugly way. I do not use pattern matching but cmon
