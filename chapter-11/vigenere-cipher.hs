@@ -1,6 +1,7 @@
 module VigenereCipher where
 
 import Data.Char
+import Control.Monad (forever)
 
 encode :: String -> String -> String
 encode m k = zipWith (shiftChar True) m (cycle k)
@@ -21,13 +22,12 @@ offset kchar isEncode
   | otherwise = - (offset kchar True)
 
 main :: IO()
-main = do
-  let message = "This is some message!!! AWESOME zZz"
-      key = "crazy secret"
-      encoded = encode message key
-      decoded = decode encoded key
-
-  putStrLn $ "encoded: " ++ encoded
-  putStrLn $ "decoded: " ++ decoded
+main = forever $ do
+  putStr "Message:"
+  message <- getLine
+  putStr "Secret:"
+  key <- getLine
+  putStrLn $ "encoded: " ++ encode message key
+  putStrLn $ "decoded: " ++ decode (encode message key) key
 
 
