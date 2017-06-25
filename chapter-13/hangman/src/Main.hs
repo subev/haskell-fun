@@ -36,27 +36,33 @@ randomWord (WordList wl) = do
 randomWord' :: IO String
 randomWord' = gameWords >>= randomWord
 
-data Puzzle = Puzzle String [Maybe Char] [Char]
+data Puzzle = Puzzle String [Maybe Char] GuessedSoFar
                       {-1        2         3-}
 {-1 the word we are tring to guess-}
 {-2 the characters we've filled n so far-}
 {-3 the letters we've guessed so far-}
+type FailedAttemps = Int
+data GuessedSoFar = GuessedSoFar [Char] FailedAttemps
+
+instance Show GuessedSoFar where
+  show (GuessedSoFar chars attemps) =
+    chars ++ " (" ++ (show attemps) ++ " failed attemps)"
 
 instance Show Puzzle where
   show (Puzzle _ discovered guessed) =
     (intersperse ' ' $ fmap renderPuzzleChar discovered)
-    ++ " Guessed so far: " ++ guessed
+    ++ " Guessed so far: " ++ (show guessed)
 
 freshPuzzle :: String -> Puzzle
 freshPuzzle w =
-  Puzzle w (fmap (const Nothing) w) []
+  Puzzle w (fmap (const Nothing) w) (GuessedSoFar [] 0)
 
 charInWord :: Puzzle -> Char -> Bool
 charInWord (Puzzle w _ _) x =
   elem x w
 
 alreadyGuessed :: Puzzle -> Char -> Bool
-alreadyGuessed (Puzzle _ _ ag) x =
+alreadyGuessed (Puzzle _ _ (GuessedSoFar ag _)) x =
   elem x ag
 
 renderPuzzleChar :: Maybe Char -> Char
@@ -64,14 +70,18 @@ renderPuzzleChar Nothing = '_'
 renderPuzzleChar (Just x) = x
 
 fillInCharacter :: Puzzle -> Char -> Puzzle
-fillInCharacter (Puzzle word filledInSoFar s) c =
-  Puzzle word newFilledSoFar (c : s)
+fillInCharacter (Puzzle word filledInSoFar (GuessedSoFar s tries)) c =
+  Puzzle word newFilledSoFar newGuessedSoFar
     where
+      newFilledSoFar = zipWith (zipper c) word filledInSoFar
+      newGuessedSoFar = if newFilledSoFar == filledInSoFar
+                           then GuessedSoFar (c : s) (tries + 1)
+                           else GuessedSoFar (c : s) tries
+
       zipper guessed wordChar guessChar =
         if wordChar == guessed
          then Just wordChar
          else guessChar
-      newFilledSoFar = zipWith (zipper c) word filledInSoFar
 
 handleGuess :: Puzzle -> Char -> IO Puzzle
 handleGuess puzzle guess = do
@@ -91,18 +101,18 @@ handleGuess puzzle guess = do
       return (fillInCharacter puzzle guess)
 
 gameOver :: Puzzle -> IO ()
-gameOver (Puzzle wordToGuess _ guessed) =
-  if (length guessed) > 7 then
-                          do putStrLn "You Lose!"
-                             putStrLn $ "The word was: " ++ wordToGuess
-                             exitSuccess
-                          else return ()
+gameOver (Puzzle wordToGuess _ (GuessedSoFar chars tries)) =
+  if tries > 7 then
+                  do putStrLn "You Lose!"
+                     putStrLn $ "The word was: " ++ wordToGuess
+                     exitSuccess
+                  else return ()
 
 gameWin :: Puzzle -> IO ()
-gameWin (Puzzle _ filledInSoFar _) =
+gameWin (Puzzle word filledInSoFar _) =
   if all isJust filledInSoFar
      then
-      do putStrLn "You win!"
+      do putStrLn $ "You win! The word was: " ++ word
          exitSuccess
      else return ()
 
