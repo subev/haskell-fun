@@ -1,0 +1,15 @@
+module CoArbitrary where
+
+import GHC.Generics
+import Test.QuickCheck
+
+data Bool' = True' | False' deriving (Eq, Show)
+
+instance CoArbitrary Bool'
+
+trueGen :: Gen Int
+trueGen = coarbitrary True' arbitrary
+
+falseGen :: Gen Int
+falseGen = coarbitrary False' arbitrary
+
