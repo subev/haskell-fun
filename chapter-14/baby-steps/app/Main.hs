@@ -87,5 +87,16 @@ sumGenCharIntFirst :: Gen (Sum Char Int)
 sumGenCharIntFirst = sumGenFirstPls
 
 {-----------------------------------------}
-{-CoArbitrary-}
+{-exercises-}
+data Fool = Fulse | Frue deriving (Eq, Show)
 
+foolGenEqual :: Gen Fool
+foolGenEqual =
+  oneof [return $ Frue, return $ Fulse]
+
+foolGenThreeToOne :: Gen Fool
+foolGenThreeToOne =
+  frequency [(3, return $ Frue), (1, return $ Fulse)]
+
+instance Arbitrary Fool where
+  arbitrary = foolGenEqual
