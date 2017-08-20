@@ -3,6 +3,7 @@ module Main where
 import Data.Monoid
 import Test.QuickCheck
 import Control.Monad
+import Data.Semigroup
 
 monoidAssoc :: (Eq m, Monoid m) => m -> m -> m -> Bool
 monoidAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
