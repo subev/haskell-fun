@@ -140,3 +140,26 @@ data Four' a b = Four' a a a b deriving (Eq, Show)
 instance Functor (Four' a) where
   fmap f (Four' a a' a'' b) = Four' a a' a'' (f b)
 
+{-Exercise Possibly-}
+data Possibly a = LolNope | Yeppers a deriving (Eq, Show)
+
+instance Functor Possibly where
+  fmap f (Yeppers x) = Yeppers (f x)
+  fmap _ _ = LolNope
+
+data Sum a b = First a | Second b deriving (Eq, Show)
+
+instance Functor (Sum a) where
+  fmap f (Second x) = Second (f x)
+  fmap _ (First x) = First x
+
+
+newtype Constant a b = Constant { getConstant :: a } deriving (Eq, Show)
+
+
+{-this implementation is only possible because Constant has two type arguments-}
+{-if there was no 'b' in the above case,
+     the compiler will requre us to modify the v variable below-}
+
+instance Functor (Constant m) where
+  fmap _ (Constant v) = Constant v
