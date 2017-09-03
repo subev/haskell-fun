@@ -67,8 +67,7 @@ instance Functor (Constant a) where
   fmap _ (Constant a) = Constant (a)
 
 instance Monoid a => Applicative (Constant a) where
-  {-TODO do not how to satisfy the compiler here-}
-  pure x = undefined
+  pure x = Constant mempty
   (<*>) (Constant a) (Constant b) = Constant (mappend a b)
 
 {-ex-}
