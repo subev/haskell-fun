@@ -64,3 +64,12 @@ twoBinds' =
     putStrLn "age pls:" >>
     getLine >>= (\age ->
       putStrLn ("y helo thar: " ++ name ++ "and your age is " ++ age)))
+
+{-example with lists-}
+twiceWhenEven :: [Integer] -> [Integer]
+twiceWhenEven xs = do
+  x <- xs
+  y <- xs
+  if even x
+     then [111111,x]
+     else [222222,y]
