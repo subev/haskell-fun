@@ -15,9 +15,13 @@ a :: Monad m => m a -> m (a -> b) -> m b
 a = flip (<*>)
 
 meh :: Monad m => [a] -> (a -> m b) -> m [b]
-{-TODO implement with known functions-}
-meh = forM
+{-this is basically implementation of forM-}
+{-meh = forM-}
+meh (a: []) f = (flip (:) []) <$> (f a)
+meh (a: rest) f = (((:) <$> (f a)) <*> (meh rest f))
 
 flipType :: (Monad m) => [m a] -> m [a]
-{-TODO implement with known functions-}
-flipType = sequence
+{-this is basically implementation of sequence-}
+{-flipType = sequence-}
+flipType [] = pure [];
+flipType (ma: rest) = (fmap (:) ma) <*> (flipType rest)
