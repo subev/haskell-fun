@@ -6,7 +6,6 @@ import Data.Monoid
 data Constant a b = Constant a deriving (Eq, Show)
 
 instance Foldable (Constant a) where
-  {-TODO-}
   foldMap f (Constant x) = mempty
 
   foldr f d (Constant x) = d
