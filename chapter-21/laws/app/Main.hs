@@ -124,9 +124,8 @@ instance Traversable (List) where
   traverse f (Cons a rest) = liftA2 (Cons) (f a) (traverse f rest)
 
 instance Foldable List where
-  {-TODO cannot make this to work if foldMap below is commented-}
   foldr f d Nil = d
-  foldr f d (Cons x rest) = foldr f (f x d) rest
+  foldr f d (Cons x rest) = f x (foldr f d rest)
 
   foldMap ctor (Nil) = mempty
   foldMap ctor (Cons x rest) = ctor x `mappend` (foldMap ctor rest)
