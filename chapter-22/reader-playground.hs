@@ -49,7 +49,7 @@ monadic = do
 
 monadicWithBind :: [Char] -> ([Char], [Char])
 {-TODO dunno how to do it with >>= operator-}
-monadicWithBind = undefined
+monadicWithBind = cap >>= (\u -> (rev >>= (\r -> return (u, r))))
 
 {-example-}
 
@@ -118,3 +118,34 @@ getDogR2 :: Reader Person Dog
 getDogR2 = Reader (Dog <$> dogName <*> address)
 
 {-MONAD-}
+
+baz :: (Functor f, Num a) => f a -> f a
+baz r = fmap (+1) r
+
+bar :: Foldable f => t -> f a -> (t, Int)
+bar r t = (r, length t)
+
+{-INSTANCE READER MONAD-}
+instance Monad (Reader r) where
+  return = pure
+  (>>=) :: Reader r a -> (a -> Reader r b) -> Reader r b
+  {-this is crazy-}
+  (>>=) (Reader ra) aRb = Reader $ \r -> runReader (aRb (ra r)) r
+
+getDogRM :: Person -> Dog
+getDogRM = do
+  name <- dogName
+  addy <- address
+  return $ Dog name addy
+
+{-TODO with my Reader-}
+
+{-getDogRM2 :: Reader Person Dog-}
+{-getDogRM2 =-}
+  {-return $ dogName >>= (\name -> (address >>= (\addy -> return $ Dog name addy)))-}
+
+{-getDogRM3 :: Reader Person Dog-}
+{-getDogRM3 = do-}
+  {-dog <- dogName-}
+  {-adr <- address-}
+  {-return $ Dog dog adr-}
