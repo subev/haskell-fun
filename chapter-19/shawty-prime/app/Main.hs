@@ -75,3 +75,4 @@ main = do
   scotty 3000 (app rConn)
 
 {-TODO come back to exercise for this chapter once done with monad transormers-}
+{-TODO Come back to Reader chapter last exercise when you feel confident-}
