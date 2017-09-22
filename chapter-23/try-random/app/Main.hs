@@ -6,6 +6,7 @@ import Control.Applicative (liftA3)
 import Control.Monad (replicateM)
 import Control.Monad.Trans.State
 import System.Random
+import Data.Monoid
 
 data Die = DieOne
          | DieTwo
@@ -76,29 +77,31 @@ instance Functor (Moi s) where
     let (a, s) = g x
      in (f a, s)
 
-instance Applicative (Moi s) where
+instance (Monoid s) => Applicative (Moi s) where
   pure :: a -> Moi s a
   pure a = Moi $ \s -> (a, s)
 
   (<*>) :: Moi s (a -> b) -> Moi s a -> Moi s b
   (Moi f) <*> (Moi g) = Moi $ \x ->
-    let (a, _) = g x
-        (f', _) = f x
-     in (f' a, x)
+    let (a, s') = g x
+        (f', s'') = f x
+     in (f' a, x <> s' <> s'')
 
 {-usage is-}
+
+applicativeTest :: (Sum Int, Sum Int)
 applicativeTest = runMoi ( (Moi $ \s -> ((+7), s)) <*> (Moi $ \s -> (13, s)) ) 5
 
 
-instance Monad (Moi s) where
+instance (Monoid s) => Monad (Moi s) where
   return = pure
   (>>=) :: Moi s a
           -> (a -> Moi s b)
           -> Moi s b
   (Moi f) >>= g = Moi $ \x ->
-    let (a, _)   = f x
+    let (a, s)   = f x
         Moi (gb) = g a
-     in gb x
+     in gb (x <> s)
 
 main = undefined
 
@@ -128,4 +131,5 @@ eval (Moi sa) = fst . sa
 modify :: (s -> s) -> Moi s ()
 modify f = (Moi $ \s -> ((), f s))
 
+ex5 :: ((), Sum Int)
 ex5 = runMoi (Main.modify (+1) >> Main.modify (+1)) 0
