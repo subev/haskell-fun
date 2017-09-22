@@ -24,9 +24,6 @@ intToDie x
   |x == 6 = DieSix
   |otherwise = error $ "intToDie got non 1-6 integer: " ++ show x
 
-main :: IO ()
-main = undefined
-
 rollDiceThreeTimes :: (Die, Die, Die)
 rollDiceThreeTimes = do
   let s = mkStdGen 0
@@ -102,3 +99,33 @@ instance Monad (Moi s) where
     let (a, _)   = f x
         Moi (gb) = g a
      in gb x
+
+main = undefined
+
+{-exercises-}
+{-ex1-}
+get :: Moi s s
+get = Moi $ \x -> (x, x)
+{-usage is-}
+{-(put "blah") "woot"-}
+
+{-ex2-}
+put :: s -> Moi s ()
+put s = Moi $ \_ -> ((), s)
+
+{-usage is-}
+{-(put "blah") "woot"-}
+
+{-ex3-}
+exec :: Moi s a -> s -> s
+exec (Moi sa) = snd . sa
+
+{-ex4-}
+eval :: Moi s a -> s -> a
+eval (Moi sa) = fst . sa
+
+{-ex5-}
+modify :: (s -> s) -> Moi s ()
+modify f = (Moi $ \s -> ((), f s))
+
+ex5 = runMoi (Main.modify (+1) >> Main.modify (+1)) 0
