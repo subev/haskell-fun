@@ -19,6 +19,9 @@ instance (Applicative f, Applicative g) => Applicative (Compose f g) where
 
   (<*>) :: Compose f g (a -> b) -> Compose f g a -> Compose f g b
   (Compose f) <*> (Compose a) = Compose ((liftA2 . liftA2) ($) f a)
+  {-what the book later suggests is-}
+  {-which means lift the <*> function over f and then <*> to x-}
+  {-Compose f <*> Compose x = Compose ((<*>) <$> f <*> x)-}
 
 instance (Foldable f, Foldable g) => Foldable (Compose f g) where
   foldMap f (Compose fga) = ((foldMap . foldMap) f fga)
