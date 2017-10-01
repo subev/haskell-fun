@@ -2,6 +2,7 @@
 module EitherT where
 
 import Control.Applicative (liftA2)
+import Control.Monad.Trans.Class
 
 newtype EitherT e m a = EitherT { runEitherT :: m (Either e a) }
 
@@ -39,3 +40,7 @@ eitherT famc fbmc x@(EitherT amb) = do
   case ab of
     (Left a) -> famc a
     (Right b) -> fbmc b
+
+instance MonadTrans (EitherT e) where
+  lift :: Monad m => m a -> EitherT e m a
+  lift = EitherT . fmap return

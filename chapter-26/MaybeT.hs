@@ -2,6 +2,7 @@
 module MaybeT where
 
 import Control.Applicative (liftA2)
+import Control.Monad.Trans.Class
 
 newtype MaybeT m a = MaybeT { runMaybeT :: m (Maybe a) }
 
@@ -29,3 +30,6 @@ instance (Monad m) => Monad (MaybeT m) where
     case ma of
       Nothing -> return Nothing
       Just a -> runMaybeT (f a)
+
+instance MonadTrans MaybeT where
+  lift = MaybeT . fmap return

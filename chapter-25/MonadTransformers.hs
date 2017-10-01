@@ -3,6 +3,7 @@ module MonadTransformers where
 
 import Control.Applicative (liftA2, (<*>))
 import Control.Monad (join)
+import Control.Monad.Trans.Class
 
 newtype Identity a = Identity { runIdentity :: a } deriving (Eq, Show)
 
@@ -38,3 +39,6 @@ instance (Monad m) => Monad (IdentityT m) where
   {-(IdentityT ma) >>= f = IdentityT $ (>>=) ma (runIdentityT . f)-}
   {-same as                          join and fmap is bind i.e.(>>=) -}
   {-(IdentityT ma) >>= f = IdentityT $ ma >>= (runIdentityT . f)-}
+
+instance MonadTrans IdentityT where
+  lift = IdentityT
