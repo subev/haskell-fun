@@ -3,6 +3,7 @@ module EitherT where
 
 import Control.Applicative (liftA2)
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 
 newtype EitherT e m a = EitherT { runEitherT :: m (Either e a) }
 
@@ -44,3 +45,6 @@ eitherT famc fbmc x@(EitherT amb) = do
 instance MonadTrans (EitherT e) where
   lift :: Monad m => m a -> EitherT e m a
   lift = EitherT . fmap return
+
+instance (MonadIO m) => MonadIO (EitherT e m) where
+  liftIO = lift . liftIO

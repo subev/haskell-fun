@@ -4,6 +4,7 @@ module MonadTransformers where
 import Control.Applicative (liftA2, (<*>))
 import Control.Monad (join)
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 
 newtype Identity a = Identity { runIdentity :: a } deriving (Eq, Show)
 
@@ -42,3 +43,6 @@ instance (Monad m) => Monad (IdentityT m) where
 
 instance MonadTrans IdentityT where
   lift = IdentityT
+
+instance (MonadIO m) => MonadIO (IdentityT m) where
+  liftIO = IdentityT . liftIO

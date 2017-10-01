@@ -3,6 +3,7 @@ module StateT where
 
 import Control.Applicative (liftA2)
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 
 newtype StateT s m a = StateT { runStateT :: s -> m (a, s) }
 
@@ -33,3 +34,7 @@ instance MonadTrans (StateT s) where
   lift m = StateT $ \s -> do
     a <- m
     return (a, s)
+
+instance (MonadIO m) => MonadIO (StateT s m) where
+  liftIO :: IO a -> (StateT s m a)
+  liftIO = lift . liftIO

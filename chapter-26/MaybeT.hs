@@ -3,6 +3,7 @@ module MaybeT where
 
 import Control.Applicative (liftA2)
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 
 newtype MaybeT m a = MaybeT { runMaybeT :: m (Maybe a) }
 
@@ -25,11 +26,15 @@ instance (Monad m) => Monad (MaybeT m) where
         Just a -> runMaybeT (f a)
 
 {-or shorter as in the book-}
-  (MaybeT mma) >>= f = MaybeT $ do
-    ma <- mma
-    case ma of
-      Nothing -> return Nothing
-      Just a -> runMaybeT (f a)
+  {-(MaybeT mma) >>= f = MaybeT $ do-}
+    {-ma <- mma-}
+    {-case ma of-}
+      {-Nothing -> return Nothing-}
+      {-Just a -> runMaybeT (f a)-}
 
 instance MonadTrans MaybeT where
   lift = MaybeT . fmap return
+
+instance (MonadIO m) => MonadIO (MaybeT m) where
+  liftIO :: IO a -> MaybeT m a
+  liftIO = lift . liftIO

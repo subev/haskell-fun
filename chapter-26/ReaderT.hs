@@ -3,6 +3,7 @@ module ReaderT where
 
 import Control.Applicative (liftA2)
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 
 newtype ReaderT r m a = ReaderT { runReaderT :: r -> m a }
 
@@ -24,3 +25,7 @@ instance (Monad m) => Monad (ReaderT r m) where
 instance MonadTrans (ReaderT r) where
   lift :: Monad m => m a -> ReaderT r m a
   lift = ReaderT . const
+
+instance (MonadIO m) => MonadIO (ReaderT r m) where
+  liftIO :: IO a -> (ReaderT r m a)
+  liftIO = lift . liftIO
